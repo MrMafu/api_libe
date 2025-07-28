@@ -1,36 +1,55 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Api\ApiResponse;
+use App\Http\Controllers\{
+    AuthController,
+    UserController,
+    BookController,
+    TopicController,
+    SubTopicController,
+};
+use App\Http\Controllers\Temp\UserController as TempUserController;
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 
-Route::post('/login', [AuthController::class, 'LoginApi']);
+// Public Routes
+Route::post("login", [AuthController::class, "login"]);
+Route::post("logout", [AuthController::class, "logout"])->middleware("auth:sanctum");
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware("auth:sanctum")->group(function() {
+    // 
+});
 
-    //Logut route
-    Route::post('/logout', [AuthController::class, 'logoutApi']);
+Route::prefix("admin")->middleware("auth:sanctum", "admin-and-librarian-only")->group(function() {
+    Route::apiResources([
+        "users" => TempUserController::class,
+    ]);
 
     // User routes
-    Route::get('/users', [App\Http\Controllers\Api\UserController::class, 'index']);
-    Route::post('/users', [App\Http\Controllers\Api\UserController::class, 'store']);
-    Route::put('/users/{id}', [App\Http\Controllers\Api\UserController::class, 'update']);
-    Route::delete('/users/{id}', [App\Http\Controllers\Api\UserController::class, 'destroy']);
-
+    // Route::get("/users", [UserController::class, "index"]);
+    // Route::post("/users", [UserController::class, "store"]);
+    // Route::put("/users/{id}", [UserController::class, "update"]);
+    // Route::delete("/users/{id}", [UserController::class, "destroy"]);
+    
     // Topic routes
-    Route::get('/topics', [App\Http\Controllers\Api\Topics::class, 'index']);
-    Route::get('/topics/{id}', [App\Http\Controllers\Api\Topics::class, 'show']);
-    Route::post('/topics', [App\Http\Controllers\Api\Topics::class, 'store']);
-    Route::put('/topics/{id}', [App\Http\Controllers\Api\Topics::class, 'update']);
-    Route::delete('/topics/{id}', [App\Http\Controllers\Api\Topics::class, 'destroy']);
-
+    Route::get("/topics", [TopicController::class, "index"]);
+    Route::get("/topics/{id}", [TopicController::class, "show"]);
+    Route::post("/topics", [TopicController::class, "store"]);
+    Route::put("/topics/{id}", [TopicController::class, "update"]);
+    Route::delete("/topics/{id}", [TopicController::class, "destroy"]);
+    
     // SubTopic routes
-    Route::get('/subtopics', [App\Http\Controllers\Api\SubTopicsController::class, 'index']);
-    Route::post('/subtopics', [App\Http\Controllers\Api\SubTopicsController::class, 'store']);
-    Route::put('/subtopics/{id}', [App\Http\Controllers\Api\SubTopicsController::class, 'update']);
-    Route::delete('/subtopics/{id}', [App\Http\Controllers\Api\SubTopicsController::class, 'destroy']);
-
+    Route::get("/subtopics", [SubTopicController::class, "index"]);
+    Route::post("/subtopics", [SubTopicController::class, "store"]);
+    Route::put("/subtopics/{id}", [SubTopicController::class, "update"]);
+    Route::delete("/subtopics/{id}", [SubTopicController::class, "destroy"]);
+    
     // Book routes
-    Route::get('/books', [App\Http\Controllers\Api\BooksController::class, 'index']);
-    Route::post('/books', [App\Http\Controllers\Api\BooksController::class, 'store']);
+    Route::get("/books", [BookController::class, "index"]);
+    Route::post("/books", [BookController::class, "store"]);
 });
+
+// Unauthenticated response
+Route::get("fallback", function () {
+    return ApiResponse::error("Unauthorized.", 401);
+})->name("login");

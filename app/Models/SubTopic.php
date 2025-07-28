@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class SubTopic extends Model
 {
     protected $fillable =[
-        'topic_id',
-        'name',
+        "topic_id",
+        "name",
     ];
 
     public function topic()

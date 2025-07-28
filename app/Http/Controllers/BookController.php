@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,10 +8,10 @@ use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SubTopic;
 
-class BooksController extends Controller
+class BookController extends Controller
 {
     public function index() {
-        // Isi nya ntar   
+        // Isi nya ntar
     }
 
     public function store(Request $request) {

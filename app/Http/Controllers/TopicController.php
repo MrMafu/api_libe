@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
 
-class Topics extends Controller
+class TopicController extends Controller
 {
     public function index()
     {

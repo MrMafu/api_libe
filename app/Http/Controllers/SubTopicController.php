@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,7 +8,7 @@ use App\Models\SubTopic;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Topic;
 
-class SubTopicsController extends Controller
+class SubTopicController extends Controller
 {
     public function index()
     {
