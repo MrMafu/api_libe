@@ -16,10 +16,16 @@ class Book extends Model
         "author",
         "publisher",
         "publication_date",
+        "price"
     ];
 
     public function subTopic()
     {
         return $this->belongsTo(SubTopic::class);
+    }
+
+    public function copies()
+    {
+        return $this->hasMany(BookCopy::class);
     }
 }

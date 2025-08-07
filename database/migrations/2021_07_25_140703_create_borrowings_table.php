@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->dateTime('due');
             $table->datetime('borrowed_at');
-            $table->datetime('returned_at');
+            $table->datetime('returned_at')->nullable();
             $table->enum('status', ['borrowed', 'returned']);
             $table->timestamps();
         });

@@ -8,14 +8,16 @@ class Fine extends Model
 {
     protected $fillable = [
         'user_id',
-        'borowing_id',
+        'borrowing_id',
         'book_copy_id',
         'amount',
         'issued_at',
         'paid_at',
         'status',
-        'reason'
+        'reason'    
     ];
+
+
 
     public function user()
     {

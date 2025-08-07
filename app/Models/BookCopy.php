@@ -8,7 +8,7 @@ class BookCopy extends Model
 {
     protected $fillable = [
         'book_id',
-        'copy_number',
+        'copy_code',
         'condition',
         'status',
     ];

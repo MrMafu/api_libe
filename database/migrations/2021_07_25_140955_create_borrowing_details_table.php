@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fines', function (Blueprint $table) {
+        Schema::create('borrowing_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('borrowing_id')->constrained('borrowings')->cascadeOnDelete();
+            $table->foreignId('book_id')->constrained('books')->cascadeOnDelete();
             $table->foreignId('book_copy_id')->constrained('book_copies')->cascadeOnDelete();
-            $table->decimal('amount');
-            $table->dateTime('issued_at');
-            $table->dateTime('paid_at');
-            $table->enum('status', ['unpaid', 'paid']);
-            $table->string('reason');
+            $table->enum('returned_condition', ['good', 'damaged'])->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fines');
+        Schema::dropIfExists('borrowing_details');
     }
 };

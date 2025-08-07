@@ -1,53 +1,52 @@
 <?php
 
 use App\Http\Api\ApiResponse;
-use App\Http\Controllers\{
+use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\GenerateOverdueFines;
+use App\Http\Controllers\Temp\{
     AuthController,
-    UserController,
-    BookController,
     TopicController,
     SubTopicController,
+    BookController,
+    BookCopyController,
+    BorrowingController,
+    FineController
 };
+
 use App\Http\Controllers\Temp\UserController as TempUserController;
 
 use Illuminate\Support\Facades\Route;
 
+Artisan::command('fines:generate', function () {
+    $this->call(GenerateOverdueFines::class);
+});
+
 // Public Routes
 Route::post("login", [AuthController::class, "login"]);
 Route::post("logout", [AuthController::class, "logout"])->middleware("auth:sanctum");
+Route::get("books", [BookController::class, "index"]);
+Route::get("bookcopies", [BookCopyController::class, "index"]);
+Route::get("topics", [TopicController::class, "index"]);
+Route::get("subtopics", [SubTopicController::class, "index"]);
+Route::get("borrowings", [BorrowingController::class, "index"]);
+Route::post('/fines/generate', [FineController::class, 'generateFines']);
 
-Route::middleware("auth:sanctum")->group(function() {
-    // 
+Route::middleware("auth:sanctum")->group(function () {
+    Route::apiResource("borrowings", BorrowingController::class);
+    Route::post('/borrowings/{id}/return', [BorrowingController::class, 'returnBooks']);
 });
 
-Route::prefix("admin")->middleware("auth:sanctum", "admin-and-librarian-only")->group(function() {
+
+Route::prefix("admin")->middleware("auth:sanctum", "admin-and-librarian-only")->group(function () {
     Route::apiResources([
         "users" => TempUserController::class,
+        "topics" => TopicController::class,
+        "subtopics" => SubTopicController::class,
+        "books" => BookController::class,
+        "bookcopies" => BookCopyController::class,
     ]);
-
-    // User routes
-    // Route::get("/users", [UserController::class, "index"]);
-    // Route::post("/users", [UserController::class, "store"]);
-    // Route::put("/users/{id}", [UserController::class, "update"]);
-    // Route::delete("/users/{id}", [UserController::class, "destroy"]);
-    
-    // Topic routes
-    Route::get("/topics", [TopicController::class, "index"]);
-    Route::get("/topics/{id}", [TopicController::class, "show"]);
-    Route::post("/topics", [TopicController::class, "store"]);
-    Route::put("/topics/{id}", [TopicController::class, "update"]);
-    Route::delete("/topics/{id}", [TopicController::class, "destroy"]);
-    
-    // SubTopic routes
-    Route::get("/subtopics", [SubTopicController::class, "index"]);
-    Route::post("/subtopics", [SubTopicController::class, "store"]);
-    Route::put("/subtopics/{id}", [SubTopicController::class, "update"]);
-    Route::delete("/subtopics/{id}", [SubTopicController::class, "destroy"]);
-    
-    // Book routes
-    Route::get("/books", [BookController::class, "index"]);
-    Route::post("/books", [BookController::class, "store"]);
 });
+
 
 // Unauthenticated response
 Route::get("fallback", function () {

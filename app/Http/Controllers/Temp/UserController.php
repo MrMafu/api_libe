@@ -78,6 +78,10 @@ class UserController extends Controller
             return ApiResponse::error("User not found.", 404);
         }
 
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return ApiResponse::error("Unauthorized", 403);
+        }
+
         $validator = Validator::make($request->all(), [
             "name"     => "sometimes|required|string|unique:users,name,{$user->id}",
             "password" => "sometimes|nullable|string|min:5",
@@ -108,6 +112,10 @@ class UserController extends Controller
         $user = User::find($id);
         if (!$user) {
             return ApiResponse::error("User not found", 404);
+        }
+
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return ApiResponse::error("Unauthorized", 403);
         }
 
         $user->delete();

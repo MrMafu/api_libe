@@ -14,6 +14,14 @@ class BookCopyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'book_id' => $this->book_id,
+            'copy_number' => $this->copy_number,
+            'condition' => $this->condition,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 }
