@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Temp;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
-use App\Models\Topic;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Api\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\TopicResource;
+use App\Models\Topic;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class TopicController extends Controller
 {
@@ -29,20 +29,19 @@ class TopicController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            "name" => "required|string|max:255",
         ]);
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
 
-
         $topic = Topic::create([
-            'name' => $request->name,
+            "name" => $request->name,
         ]);
 
         $data = new TopicResource($topic);
@@ -69,17 +68,16 @@ class TopicController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            "name" => "required|string|max:255",
         ]);
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
-
 
         $topic = Topic::find($id);
         if (!$topic) {
@@ -87,7 +85,7 @@ class TopicController extends Controller
         }
 
         $topic->update([
-            'name' => $request->name,
+            "name" => $request->name,
         ]);
 
         return ApiResponse::success(new TopicResource($topic), "Topic updated successfully.");
@@ -103,10 +101,9 @@ class TopicController extends Controller
             return ApiResponse::error("Topic not found.", 404);
         };
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
-
 
         $topic->delete();
         return ApiResponse::success([], "Topic deleted successfully.");

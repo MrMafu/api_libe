@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminAndLibrarianOnly;
+use App\Http\Middleware\CookieToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,9 +17,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
         return App\Schedule\Kernel::class;
     })
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->statefulApi();
+        // $middleware->statefulApi();
         $middleware->alias([
-            "admin-and-librarian-only" => AdminAndLibrarianOnly::class
+            "admin-and-librarian-only" => AdminAndLibrarianOnly::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

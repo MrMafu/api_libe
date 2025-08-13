@@ -16,12 +16,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(5)->make();
+        // User::factory(5)->make();
 
-        // User::create([
-        //     "name"     => "superadmin",
-        //     "password" => Hash::make("superadmin123"),
-        //     "role"     => "admin",
-        // ]);
+        User::create([
+            "name"     => "superadmin",
+            "password" => Hash::make("superadmin123"),
+            "role"     => "admin",
+        ]);
     }
 }

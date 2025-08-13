@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Temp;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\SubTopic;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Topic;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Api\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\SubTopicResource;
+use App\Models\Topic;
+use App\Models\SubTopic;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class SubTopicController extends Controller
 {
@@ -18,11 +18,11 @@ class SubTopicController extends Controller
      */
     public function index()
     {
-        $subTopics = SubTopic::with('topic')->get();
+        $subTopics = SubTopic::all();
         $data = SubTopicResource::collection($subTopics);
+
         return ApiResponse::success($data, "Subtopics retrieved successfully.");
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -30,26 +30,25 @@ class SubTopicController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'topic_id' => 'required|integer',
+            "name"     => "required|string|max:255",
+            "topic_id" => "required|integer",
         ]);
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
-
 
         $topic = Topic::find($request->topic_id);
         if (!$topic) {
             return ApiResponse::error("Topic not found.", 404);
         }
 
-        $subTopic = SubTopic::create($request->only(['name', 'topic_id']));
-        $subTopic->load('topic');
+        $subTopic = SubTopic::create($request->only(["name", "topic_id"]));
+        $subTopic->load("topic");
 
         $data = new SubTopicResource($subTopic);
         return ApiResponse::success($data, "Subtopic created successfully.", 201);
@@ -75,14 +74,13 @@ class SubTopicController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'topic_id' => 'required|integer',
+            "name"     => "required|string|max:255",
+            "topic_id" => "required|integer",
         ]);
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
-
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
@@ -93,8 +91,8 @@ class SubTopicController extends Controller
             return ApiResponse::error("Subtopic not found.", 404);
         }
 
-        $subTopic->update($request->only(['name', 'topic_id']));
-        $subTopic->load('topic');
+        $subTopic->update($request->only(["name", "topic_id"]));
+        $subTopic->load("topic");
 
         $data = new SubTopicResource($subTopic);
         return ApiResponse::success($data, "Subtopic updated successfully.");
@@ -111,13 +109,11 @@ class SubTopicController extends Controller
             return ApiResponse::error("Subtopic not found.", 404);
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
 
-
         $subTopic->delete();
-
         return ApiResponse::success(null, "Subtopic deleted successfully.");
     }
 }

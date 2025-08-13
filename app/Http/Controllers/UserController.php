@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Temp;
+namespace App\Http\Controllers;
 
 use App\Http\Api\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -78,7 +78,7 @@ class UserController extends Controller
             return ApiResponse::error("User not found.", 404);
         }
 
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== "admin") {
             return ApiResponse::error("Unauthorized", 403);
         }
 
@@ -114,7 +114,7 @@ class UserController extends Controller
             return ApiResponse::error("User not found", 404);
         }
 
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== "admin") {
             return ApiResponse::error("Unauthorized", 403);
         }
 

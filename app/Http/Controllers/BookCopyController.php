@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Temp;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Api\ApiResponse;
-use App\Models\BookCopy;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\BookCopyResource;
+use App\Models\BookCopy;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class BookCopyController extends Controller
 {
@@ -17,8 +17,9 @@ class BookCopyController extends Controller
      */
     public function index()
     {
-        $bookCopies = BookCopy::with('book')->get();
+        $bookCopies = BookCopy::all();
         $data = BookCopyResource::collection($bookCopies);
+        
         return ApiResponse::success($data, "Book copies retrieved successfully.");
     }
 
@@ -28,24 +29,23 @@ class BookCopyController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'book_id' => 'required|integer',
-            'copy_code' => 'required|string',
-            'condition' => 'required|string|in:good,damaged',
-            'status' => 'required|string|in:available,borrowed,lost',
+            "book_id"   => "required|integer",
+            "copy_code" => "required|string",
+            "condition" => "required|string|in:good,damaged",
+            "status"    => "required|string|in:available,borrowed,lost",
         ]);
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
 
-
-        $data = $request->only(['book_id', 'copy_code', 'condition', 'status']);
+        $data = $request->only(["book_id", "copy_code", "condition", "status"]);
         $bookCopy = BookCopy::create($data);
-        $bookCopy->load('book');
+        $bookCopy->load("book");
         $data = new BookCopyResource($bookCopy);
         return ApiResponse::success($data, "Book copy created successfully.", 201);
     }
@@ -55,7 +55,7 @@ class BookCopyController extends Controller
      */
     public function show(string $id)
     {
-        $bookCopy = BookCopy::with('book')->find($id);
+        $bookCopy = BookCopy::with("book")->find($id);
         if (!$bookCopy) {
             return ApiResponse::error("Book copy not found.", 404);
         }
@@ -70,15 +70,14 @@ class BookCopyController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'copy_code' => 'sometimes|required|string',
-            'condition' => 'sometimes|required|string|in:good,damaged',
-            'status' => 'sometimes|required|string|in:available,borrowed,lost',
+            "copy_code" => "sometimes|required|string",
+            "condition" => "sometimes|required|string|in:good,damaged",
+            "status"    => "sometimes|required|string|in:available,borrowed,lost",
         ]);
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
-
 
         if ($validator->fails()) {
             return ApiResponse::error("Validation error.", 422, $validator->errors());
@@ -88,8 +87,9 @@ class BookCopyController extends Controller
         if (!$bookCopy) {
             return ApiResponse::error("Book copy not found.", 404);
         }
-        $bookCopy->update($request->only(['copy_code', 'condition', 'status']));
-        $bookCopy->load('book');
+
+        $bookCopy->update($request->only(["copy_code", "condition", "status"]));
+        $bookCopy->load("book");
         $data = new BookCopyResource($bookCopy);
         return ApiResponse::success($data, "Book copy updated successfully.");
     }
@@ -104,7 +104,7 @@ class BookCopyController extends Controller
             return ApiResponse::error("Book copy not found.", 404);
         }
 
-        if (!Auth::check() || !in_array(Auth::user()->role, ['librarian', 'admin'])) {
+        if (!Auth::check() || !in_array(Auth::user()->role, ["librarian", "admin"])) {
             return ApiResponse::error("Unauthorized", 403);
         }
 
