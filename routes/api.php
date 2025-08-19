@@ -8,6 +8,7 @@ use App\Console\Commands\GenerateOverdueFines;
 
 use App\Http\Controllers\{
     AuthController,
+    DashboardController,
     UserController,
     TopicController,
     SubTopicController,
@@ -38,6 +39,7 @@ Route::middleware("auth:sanctum")->group(function () {
 });
 
 Route::prefix("admin")->middleware("auth:sanctum", "admin-and-librarian-only")->group(function () {
+    Route::get("stats", [DashboardController::class, "index"]);
     Route::apiResources([
         "users" => UserController::class,
         "topics" => TopicController::class,
