@@ -17,7 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
+        $books = Book::with("subTopic.topic")->get();
         $data = BookResource::collection($books);
 
         return ApiResponse::success($data, "Books retrieved successfully.");
@@ -73,6 +73,7 @@ class BookController extends Controller
         }
 
         $book = Book::create($data);
+        $book->load("subTopic.topic");
 
         return ApiResponse::success(new BookResource($book), "Book created successfully.", 201);
     }
@@ -82,7 +83,7 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::with("subTopic")->find($id);
+        $book = Book::with("subTopic.topic")->find($id);
         if (!$book) {
             return ApiResponse::error("Book not found.", 404);
         }
@@ -139,7 +140,9 @@ class BookController extends Controller
             $path = $coverFile->store("covers", "public");
             $book->cover = $path;
         }
-        $book->load("subTopic");
+        
+        $book->save();
+        $book->load("subTopic.topic");
 
         $data = new BookResource($book);
         return ApiResponse::success($data, "Book updated successfully.");

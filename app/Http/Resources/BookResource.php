@@ -16,7 +16,7 @@ class BookResource extends JsonResource
     {
         return [
             "id"               => $this->id,
-            "sub_topic"        => new SubTopicResource($this->whenLoaded("sub_topic")),
+            "sub_topic"        => new SubTopicResource($this->whenLoaded("subTopic")),
             "isbn"             => $this->isbn,
             "cover"            => $this->cover,
             "title"            => $this->title,
