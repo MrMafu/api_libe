@@ -17,9 +17,10 @@ class BookCopyResource extends JsonResource
         return [
             'id' => $this->id,
             'book_id' => $this->book_id,
-            'copy_number' => $this->copy_number,
+            'copy_code' => $this->copy_code,
             'condition' => $this->condition,
             'status' => $this->status,
+            'book' => new BookResource($this->whenLoaded('book')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -27,6 +27,7 @@ class BorrowingResource extends JsonResource
             return [
                 'book_title' => $detail->book->title,
                 'copy_code' => $detail->bookCopy->copy_code,
+                'book_copy_id' => $detail->bookCopy->id,
                 'returned_condition' => $detail->returned_condition,
             ];
         }),

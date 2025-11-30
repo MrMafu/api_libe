@@ -17,7 +17,7 @@ class BookCopyController extends Controller
      */
     public function index()
     {
-        $bookCopies = BookCopy::all();
+        $bookCopies = BookCopy::with('book')->get();
         $data = BookCopyResource::collection($bookCopies);
         
         return ApiResponse::success($data, "Book copies retrieved successfully.");

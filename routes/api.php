@@ -31,10 +31,12 @@ Route::middleware("auth:sanctum")->group(function () {
     // Route::apiResource("borrowings", BorrowingController::class);
     Route::post("/borrowings/{id}/return", [BorrowingController::class, "returnBooks"]);
     Route::get("books", [BookController::class, "index"]);
+    Route::get("books/{id}", [BookController::class, "show"]);
     Route::get("bookcopies", [BookCopyController::class, "index"]);
     Route::get("topics", [TopicController::class, "index"]);
     Route::get("subtopics", [SubTopicController::class, "index"]);
     Route::get("borrowings", [BorrowingController::class, "index"]);
+    Route::post("borrowings", [BorrowingController::class, "store"]);
     Route::post("/fines/generate", [FineController::class, "generateFines"]);
 });
 
